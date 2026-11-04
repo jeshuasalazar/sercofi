@@ -18,8 +18,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/img/Guadalupe.webp">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/img/Puzzle2.webp">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/diagnostico.css">
   <link rel="stylesheet" href="assets/css/boletin.css">
@@ -76,15 +76,12 @@
 
   <main id="main">
     <!-- ================= HERO ================= -->
-    <section class="hero" id="inicio">
-      <div class="hero__bg" aria-hidden="true">
-        <div class="hero__grid-lines"></div>
-        <span class="blob blob--1" data-parallax="-0.15"></span>
-        <span class="blob blob--2" data-parallax="0.1"></span>
-        <span class="blob blob--3" data-parallax="-0.25"></span>
+    <section class="hero on-dark" id="inicio">
+      <div class="hero__media" aria-hidden="true">
+        <img src="assets/img/Puzzle2.webp" alt="" width="1600" height="800" fetchpriority="high">
       </div>
 
-      <div class="container hero__grid">
+      <div class="container">
         <div class="hero__copy">
           <span class="hero__badge reveal"><b>Nuevo</b> Diagnóstico fiscal gratuito en 2 minutos</span>
           <h1 class="split" data-split>Tu contabilidad <span class="accent">en orden.<svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M2 14 C 50 4, 120 4, 198 12"/></svg></span> Tu negocio, creciendo.</h1>
@@ -103,7 +100,7 @@
               <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
             <a class="btn btn--ghost magnetic" href="https://wa.me/525539887605?text=Hola%20SERCOFI%2C%20quiero%20informaci%C3%B3n%20sobre%20sus%20servicios." target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="#1fa855"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.96 1.35-.5.05-1.13.07-1.83-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.8-4.18-4.94-4.37-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.26.1 1.68.79 1.97.94.29.14.48.22.55.34.07.12.07.7-.17 1.38Z"/></svg>
+              <svg viewBox="0 0 24 24" fill="#25d366"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.8 14.03c-.24.68-1.42 1.3-1.96 1.35-.5.05-1.13.07-1.83-.11-.42-.13-.96-.31-1.65-.61-2.9-1.25-4.8-4.18-4.94-4.37-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36h.56c.18 0 .42-.07.66.5.24.58.82 2 .89 2.15.07.14.12.31.02.5-.1.19-.14.31-.29.48-.14.17-.3.38-.43.51-.14.14-.29.3-.13.59.17.29.74 1.22 1.59 1.98 1.09.97 2.01 1.27 2.3 1.42.29.14.46.12.63-.07.17-.19.72-.84.92-1.13.19-.29.38-.24.65-.14.26.1 1.68.79 1.97.94.29.14.48.22.55.34.07.12.07.7-.17 1.38Z"/></svg>
               Escríbenos
             </a>
           </div>
@@ -117,41 +114,11 @@
           </div>
         </div>
 
-        <div class="hero__visual reveal reveal--scale" style="--d:.2s" aria-hidden="true">
-          <div class="hero__ring"></div>
-          <div class="hero__frame" data-tilt>
-            <img src="assets/img/Guadalupe.webp" alt="" width="720" height="720" fetchpriority="high">
-          </div>
-
-          <div class="float float--chart" data-parallax="0.06">
-            <small>Reporte mensual</small>
-            <div class="num">Tus finanzas, claras</div>
-            <span class="up">▲ Información para decidir</span>
-            <svg viewBox="0 0 200 56">
-              <defs>
-                <linearGradient id="gradArea" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#e4007c" stop-opacity=".28"/>
-                  <stop offset="1" stop-color="#e4007c" stop-opacity="0"/>
-                </linearGradient>
-              </defs>
-              <path class="chart-area" d="M2 48 L30 40 L58 44 L86 30 L114 34 L142 18 L170 22 L198 6 L198 56 L2 56 Z"/>
-              <path class="chart-line" d="M2 48 L30 40 L58 44 L86 30 L114 34 L142 18 L170 22 L198 6"/>
-              <circle class="chart-dot" cx="198" cy="6" r="4"/>
-            </svg>
-          </div>
-
-          <div class="float float--check" data-parallax="-0.05">
-            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-            <div><strong>Declaración presentada</strong><span>A tiempo y sin multas</span></div>
-          </div>
-
-          <div class="float float--time" data-parallax="0.04">
-            <span class="live"></span><span>Atención personalizada</span>
-          </div>
-        </div>
       </div>
 
-      <div class="marquee" aria-hidden="true">
+    </section>
+    <!-- Franja de servicios -->
+    <div class="marquee" aria-hidden="true">
         <div class="marquee__track">
           <div class="marquee__item">Contabilidad electrónica</div>
           <div class="marquee__item">Declaraciones mensuales</div>
@@ -164,7 +131,6 @@
           <div class="marquee__item">Asesoría de negocios</div>
         </div>
       </div>
-    </section>
 
     <!-- ================= BOLETÍN ================= -->
     <section class="section bf-home" id="boletin" style="padding-bottom:40px">
@@ -186,7 +152,7 @@
     </section>
 
     <!-- ================= SERVICIOS ================= -->
-    <section class="section" id="servicios">
+    <section class="section section--band" id="servicios">
       <div class="container">
         <div class="section-head">
           <div>
@@ -197,71 +163,67 @@
         </div>
 
         <div class="services__grid">
-          <article class="svc reveal" style="--d:0s" data-tilt>
-            <div class="svc__img">
-              <img src="assets/img/Asesoria_negocios.webp" alt="Asesor presentando resultados de un negocio" loading="lazy" width="960" height="640">
-              <span class="svc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/><path d="M15 8h5v5"/></svg></span>
-            </div>
-            <div class="svc__body">
+          <article class="svc reveal" style="--d:0s">
+            <img src="assets/img/Asesoria_negocios.webp" alt="Asesor presentando resultados de un negocio" loading="lazy" width="960" height="640">
+            <div class="svc__panel">
               <h3>Asesoría de negocios</h3>
-              <p>Soluciones a la medida para proteger tu patrimonio y crecer con bases sólidas.</p>
-              <ul class="svc__list">
+              <div class="svc__body">
+                <p>Soluciones a la medida para proteger tu patrimonio y crecer con bases sólidas.</p>
+                <ul class="svc__list">
                 <li>Planeación financiera</li>
                 <li>Apertura de empresa</li>
                 <li>Acompañamiento estratégico</li>
-              </ul>
-              <a class="svc__link" href="#diagnostico" data-pick="Asesoría de negocios">Quiero asesoría <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                </ul>
+                <a class="svc__link" href="#diagnostico" data-pick="Asesoría de negocios">Quiero asesoría <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
             </div>
           </article>
 
-          <article class="svc reveal" style="--d:.1s" data-tilt>
-            <div class="svc__img">
-              <img src="assets/img/Impuestos.webp" alt="Persona calculando impuestos con calculadora y billetes" loading="lazy" width="960" height="640">
-              <span class="svc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15l6-6"/><circle cx="9.5" cy="10.5" r=".5"/><circle cx="14.5" cy="14.5" r=".5"/></svg></span>
-            </div>
-            <div class="svc__body">
+          <article class="svc reveal" style="--d:.1s">
+            <img src="assets/img/Impuestos.webp" alt="Persona calculando impuestos con calculadora y billetes" loading="lazy" width="960" height="640">
+            <div class="svc__panel">
               <h3>Impuestos</h3>
-              <p>Cumplimiento fiscal correcto, seas persona física o moral, sin riesgos ni sanciones.</p>
-              <ul class="svc__list">
+              <div class="svc__body">
+                <p>Cumplimiento fiscal correcto, seas persona física o moral, sin riesgos ni sanciones.</p>
+                <ul class="svc__list">
                 <li>Declaraciones mensuales y anual</li>
                 <li>Contabilidad electrónica</li>
                 <li>Atención a requerimientos del SAT</li>
-              </ul>
-              <a class="svc__link" href="#diagnostico" data-pick="Contabilidad mensual">Revisar mi situación <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                </ul>
+                <a class="svc__link" href="#diagnostico" data-pick="Contabilidad mensual">Revisar mi situación <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
             </div>
           </article>
 
-          <article class="svc reveal" style="--d:.2s" data-tilt>
-            <div class="svc__img">
-              <img src="assets/img/Capital_humano.webp" alt="Dos personas dándose la mano en una oficina" loading="lazy" width="960" height="640">
-              <span class="svc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-            </div>
-            <div class="svc__body">
+          <article class="svc reveal" style="--d:.2s">
+            <img src="assets/img/Capital_humano.webp" alt="Dos personas dándose la mano en una oficina" loading="lazy" width="960" height="640">
+            <div class="svc__panel">
               <h3>Capital humano</h3>
-              <p>Administración integral de nómina y todo lo laboral, con cumplimiento normativo.</p>
-              <ul class="svc__list">
+              <div class="svc__body">
+                <p>Administración integral de nómina y todo lo laboral, con cumplimiento normativo.</p>
+                <ul class="svc__list">
                 <li>Cálculo y timbrado de nómina</li>
                 <li>IMSS, Infonavit e ISN</li>
                 <li>Altas, bajas y finiquitos</li>
-              </ul>
-              <a class="svc__link" href="#diagnostico" data-pick="Nómina e IMSS">Ordenar mi nómina <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                </ul>
+                <a class="svc__link" href="#diagnostico" data-pick="Nómina e IMSS">Ordenar mi nómina <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
             </div>
           </article>
 
-          <article class="svc reveal" style="--d:.3s" data-tilt>
-            <div class="svc__img">
-              <img src="assets/img/Control_interno.webp" alt="Equipo revisando información financiera" loading="lazy" width="960" height="640">
-              <span class="svc__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
-            </div>
-            <div class="svc__body">
+          <article class="svc reveal" style="--d:.3s">
+            <img src="assets/img/Control_interno.webp" alt="Equipo revisando información financiera" loading="lazy" width="960" height="640">
+            <div class="svc__panel">
               <h3>Control interno</h3>
-              <p>Información financiera confiable y procesos documentados, listos para cualquier revisión.</p>
-              <ul class="svc__list">
+              <div class="svc__body">
+                <p>Información financiera confiable y procesos documentados, listos para cualquier revisión.</p>
+                <ul class="svc__list">
                 <li>Procesos y políticas</li>
                 <li>Revisión de información financiera</li>
                 <li>Preparación para auditorías</li>
-              </ul>
-              <a class="svc__link" href="#diagnostico" data-pick="Control interno / auditoría">Fortalecer mi control <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                </ul>
+                <a class="svc__link" href="#diagnostico" data-pick="Control interno / auditoría">Fortalecer mi control <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              </div>
             </div>
           </article>
         </div>
@@ -269,9 +231,8 @@
     </section>
 
     <!-- ================= POR QUÉ ================= -->
-    <section class="section why">
-      <div class="why__bg" aria-hidden="true" data-parallax="0.08"></div>
-      <div class="why__glow" aria-hidden="true"></div>
+    <section class="section why on-dark">
+      <div class="why__bg" aria-hidden="true"></div>
       <div class="container">
         <span class="eyebrow reveal">¿Por qué SERCOFI?</span>
         <h2 class="h2 split" data-split>Hacer las cosas bien no es una opción, <em>es la única manera.</em></h2>
@@ -338,7 +299,7 @@
     </section>
 
     <!-- ================= NOSOTROS ================= -->
-    <section class="section" id="nosotros" style="padding-top:0">
+    <section class="section section--band" id="nosotros">
       <div class="container">
         <div class="about__top">
           <div>
@@ -567,28 +528,35 @@
       </div>
     </section>
 
-    <!-- ================= CTA ================= -->
-    <section class="cta">
-      <div class="cta__bg" aria-hidden="true" data-parallax="0.12"></div>
+    <!-- ================= CTA (banner) ================= -->
+    <section class="cta-wrap">
       <div class="container">
-        <div>
-          <h2 class="split" data-split>¿Te llegó una carta del SAT? No te preocupes, te ayudamos.</h2>
-          <p class="reveal" style="--d:.2s">Mientras más pronto lo atiendas, más opciones tienes.</p>
-        </div>
-        <div class="cta__actions reveal" style="--d:.3s">
-          <a class="btn btn--light magnetic" href="tel:+525539887605">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            55 3988 7605
-          </a>
-          <a class="btn btn--wa magnetic" href="https://wa.me/525539887605?text=Hola%20SERCOFI%2C%20me%20lleg%C3%B3%20una%20carta%20del%20SAT%20y%20necesito%20ayuda." target="_blank" rel="noopener">WhatsApp</a>
+        <div class="cta on-dark reveal">
+          <div>
+            <h2>¿Te llegó una carta del SAT? No te preocupes, te ayudamos.</h2>
+            <p>Mientras más pronto lo atiendas, más opciones tienes.</p>
+          </div>
+          <div class="cta__actions">
+            <a class="btn btn--primary" href="tel:+525539887605">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              55 3988 7605
+            </a>
+            <a class="btn btn--wa" href="https://wa.me/525539887605?text=Hola%20SERCOFI%2C%20me%20lleg%C3%B3%20una%20carta%20del%20SAT%20y%20necesito%20ayuda." target="_blank" rel="noopener">WhatsApp</a>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
   <!-- ================= FOOTER ================= -->
-  <footer class="footer">
+  <footer class="footer on-dark">
     <div class="container">
+      <div class="footer__connect">
+        <h3>Conéctate</h3>
+        <a href="#diagnostico">Diagnóstico gratuito</a>
+        <a href="https://wa.me/525539887605?text=Hola%20SERCOFI%2C%20quiero%20informaci%C3%B3n%20sobre%20sus%20servicios." target="_blank" rel="noopener">WhatsApp</a>
+        <a href="mailto:contacto@sercofi.mx">Escríbenos</a>
+      </div>
       <div class="footer__grid">
         <div>
           <img class="footer__logo" src="assets/img/logo.webp" alt="SERCOFI" width="160" height="51" loading="lazy">
