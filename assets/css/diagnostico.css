@@ -8,18 +8,24 @@
   --sd-line: #e3e3ea;
   --sd-bg: #f6f6f9;
   --sd-error: #c62828;
-  font-family: inherit;
+  font-family: "Rubik", sans-serif;
   color: var(--sd-ink);
 }
 .sd-card {
   position: relative;
   background: #fff;
-  border-radius: 8px;
-  border: 0;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 18px 40px -18px rgba(0, 0, 0, .18);
-  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid #efe9f1;
+  box-shadow: 0 30px 80px -24px rgba(21, 19, 28, .22), 0 0 0 8px rgba(228, 0, 124, .04);
+  padding: 36px;
 }
-.sd-step-label b { color: var(--sd-pink-dark); font-weight: 600; }
+.sd-card::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: linear-gradient(140deg, rgba(228,0,124,.5), transparent 35%, transparent 70%, rgba(228,0,124,.3));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.sd-step-label b { color: var(--sd-pink); font-weight: 500; }
 .sd-result-icon svg { width: 64px; height: 64px; }
 .sd-result-icon circle { stroke-dasharray: 160; stroke-dashoffset: 160; animation: sd-draw .8s cubic-bezier(.22,1,.36,1) .1s forwards; }
 .sd-result-icon path { stroke-dasharray: 40; stroke-dashoffset: 40; animation: sd-draw .5s cubic-bezier(.22,1,.36,1) .7s forwards; }
@@ -32,15 +38,15 @@
   text-transform: uppercase;
   margin: 0 0 6px;
 }
-.sd-title { font-size: 1.75rem; font-weight: 300; margin: 0 0 8px; line-height: 1.2; }
+.sd-title { font-size: 1.75rem; font-weight: 700; margin: 0 0 8px; line-height: 1.2; }
 .sd-sub { color: var(--sd-muted); margin: 0 0 20px; }
-.sd-progress { height: 4px; background: var(--sd-line); border-radius: 0; overflow: hidden; }
+.sd-progress { height: 6px; background: var(--sd-line); border-radius: 99px; overflow: hidden; }
 .sd-progress-bar { display: block; height: 100%; width: 0; background: var(--sd-pink); transition: width .35s ease; }
 .sd-step-label { font-size: .8rem; color: var(--sd-muted); margin: 8px 0 20px; }
 
 .sd-step { border: 0; padding: 0; margin: 0; min-width: 0; animation: sd-in .3s ease; }
-.sd-step legend { font-size: 1.5rem; font-weight: 300; margin-bottom: 14px; float: none; }
-.sd-q { font-weight: 600; margin: 18px 0 8px; }
+.sd-step legend { font-size: 1.25rem; font-weight: 500; margin-bottom: 14px; float: none; }
+.sd-q { font-weight: 500; margin: 18px 0 8px; }
 .sd-hint { color: var(--sd-muted); font-size: .9rem; margin: -6px 0 12px; }
 
 .sd-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
@@ -50,19 +56,19 @@
 .sd-opt span {
   display: flex; align-items: center; justify-content: center; text-align: center;
   min-height: 52px; padding: 10px 14px;
-  border: 1px solid var(--sd-line); border-radius: 8px;
+  border: 1.5px solid var(--sd-line); border-radius: 10px;
   transition: border-color .15s, background .15s, color .15s;
 }
 .sd-opt:hover span { border-color: var(--sd-pink); }
-.sd-opt input:checked + span { border-color: var(--sd-pink); background: var(--sd-pink-soft); color: var(--sd-pink-dark); font-weight: 600; }
+.sd-opt input:checked + span { border-color: var(--sd-pink); background: var(--sd-pink-soft); color: var(--sd-pink-dark); font-weight: 500; }
 .sd-opt input:focus-visible + span { outline: 3px solid rgba(228, 0, 124, .35); outline-offset: 2px; }
 
 .sd-field { display: block; margin-top: 16px; }
-.sd-field > span { display: block; font-weight: 600; margin-bottom: 6px; font-size: .95rem; }
+.sd-field > span { display: block; font-weight: 500; margin-bottom: 6px; font-size: .95rem; }
 .sd-field em { color: var(--sd-muted); font-style: normal; font-weight: 400; }
 .sd-field input, .sd-field textarea {
   width: 100%; padding: 12px 14px; font: inherit; color: var(--sd-ink);
-  border: 1px solid var(--sd-line); border-radius: 8px; background: #fff;
+  border: 1.5px solid var(--sd-line); border-radius: 10px; background: #fff;
 }
 .sd-field input:focus, .sd-field textarea:focus { outline: none; border-color: var(--sd-pink); box-shadow: 0 0 0 3px rgba(228, 0, 124, .15); }
 .sd-field .sd-invalid, .sd-field input.sd-invalid { border-color: var(--sd-error); }
@@ -72,7 +78,7 @@
 .sd-check { display: flex; gap: 10px; align-items: flex-start; margin-top: 20px; font-size: .95rem; cursor: pointer; }
 .sd-check input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--sd-pink); flex-shrink: 0; }
 .sd-check a { color: var(--sd-pink); }
-.sd-legal { margin: 20px 0 0; padding: 12px 14px; border-radius: 8px; background: var(--sd-bg); color: var(--sd-muted); font-size: .78rem; line-height: 1.5; }
+.sd-legal { margin: 20px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--sd-bg); color: var(--sd-muted); font-size: .78rem; line-height: 1.5; }
 .sd-legal strong { color: var(--sd-ink); font-weight: 500; }
 .sd-legal a { color: var(--sd-pink); }
 .sd-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
@@ -82,15 +88,15 @@
 .sd-nav { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; }
 .sd-btn {
   display: inline-flex; align-items: center; justify-content: center;
-  border: 1px solid transparent; border-radius: 100px; padding: 8px 32px; min-height: 44px;
-  background: var(--sd-pink); color: #fff; font: inherit; font-weight: 600;
-  cursor: pointer; text-decoration: none; transition: background-color .3s, color .3s, opacity .15s;
+  border: 0; border-radius: 10px; padding: 12px 24px; min-height: 48px;
+  background: var(--sd-pink); color: #fff; font: inherit; font-weight: 500;
+  cursor: pointer; text-decoration: none; transition: background .15s, opacity .15s;
 }
-.sd-btn:hover { background: #120f18; color: #fff; }
+.sd-btn:hover { background: var(--sd-pink-dark); color: #fff; }
 .sd-btn[hidden], .sd-step[hidden], .sd-form[hidden], .sd-result[hidden], .sd-head[hidden] { display: none !important; }
 .sd-btn[disabled] { opacity: .6; cursor: wait; }
-.sd-btn--ghost { background: transparent; color: var(--sd-ink); border-color: var(--sd-ink); }
-.sd-btn--ghost:hover { background: var(--sd-ink); color: #fff; }
+.sd-btn--ghost { background: transparent; color: var(--sd-muted); border: 1.5px solid var(--sd-line); }
+.sd-btn--ghost:hover { background: var(--sd-bg); color: var(--sd-ink); }
 .sd-btn--ghost[aria-hidden="true"] { visibility: hidden; }
 .sd-nav [data-sd="next"], .sd-nav [data-sd="submit"] { margin-left: auto; }
 .sd-btn--wa { background: #1fa855; margin-top: 8px; }
@@ -98,14 +104,14 @@
 
 .sd-result { text-align: center; padding: 16px 0 8px; animation: sd-in .4s ease; }
 .sd-result-icon { width: 64px; height: 64px; margin: 0 auto 16px; color: var(--sd-pink); }
-.sd-result-title { font-weight: 300; font-size: 1.5rem; }
+.sd-result-title { font-weight: 700; font-size: 1.5rem; }
 .sd-result-text { color: var(--sd-muted); max-width: 480px; margin: 8px auto 20px; }
 
 @keyframes sd-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .sd-step, .sd-result { animation: none; } .sd-progress-bar { transition: none; } }
 
 @media (max-width: 576px) {
-  .sd-card { padding: 24px 18px; }
+  .sd-card { padding: 22px 18px; border-radius: 20px; }
   .sd-grid { grid-template-columns: 1fr; }
   .sd-options { grid-template-columns: 1fr; }
   .sd-options--row { grid-template-columns: repeat(2, 1fr); }
