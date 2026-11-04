@@ -97,7 +97,7 @@
         links.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + e.target.id); });
       });
     }, { rootMargin: "-45% 0px -50% 0px" });
-    ["servicios", "proceso", "nosotros", "diagnostico"].forEach(function (id) { var s = document.getElementById(id); if (s) secIO.observe(s); });
+    ["servicios", "boletin", "proceso", "nosotros", "diagnostico"].forEach(function (id) { var s = document.getElementById(id); if (s) secIO.observe(s); });
   }
 
   /* ---------- Rotating words ---------- */

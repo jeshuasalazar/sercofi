@@ -22,6 +22,7 @@
   <link rel="preload" as="image" href="assets/img/Guadalupe.webp">
   <link rel="stylesheet" href="assets/css/styles.css">
   <link rel="stylesheet" href="assets/css/diagnostico.css">
+  <link rel="stylesheet" href="assets/css/boletin.css">
   <script>document.documentElement.classList.replace('no-js','js');</script>
 
   <script type="application/ld+json">
@@ -61,6 +62,7 @@
       </a>
       <ul class="nav__links" id="menu">
         <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#boletin">Boletín fiscal</a></li>
         <li><a href="#proceso">Cómo trabajamos</a></li>
         <li><a href="#nosotros">Nosotros</a></li>
         <li><a href="#diagnostico">Diagnóstico</a></li>
@@ -160,6 +162,25 @@
           <div class="marquee__item">Requerimientos del SAT</div>
           <div class="marquee__item">Control interno</div>
           <div class="marquee__item">Asesoría de negocios</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= BOLETÍN ================= -->
+    <section class="section bf-home" id="boletin" style="padding-bottom:40px">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow reveal">Boletín fiscal</span>
+            <h2 class="h2 split" data-split>Lo último del SAT y el DOF, <em>explicado en simple</em></h2>
+          </div>
+          <div class="reveal" style="--d:.15s;display:flex;flex-direction:column;align-items:flex-start;gap:14px">
+            <span class="bf-updated"><span class="live"></span><span id="bf-home-updated">Actualizado</span></span>
+            <a class="btn btn--ghost btn--sm magnetic" href="boletin.html">Ver todo el boletín <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+        <div id="bf-home" class="reveal" style="--d:.1s">
+          <div class="bf-home__grid"><div class="bf-skeleton" style="min-height:340px"></div><div class="bf-list"><div class="bf-skeleton"></div><div class="bf-skeleton"></div><div class="bf-skeleton"></div></div></div>
         </div>
       </div>
     </section>
@@ -588,6 +609,7 @@
             <li><a href="#nosotros">Nosotros</a></li>
             <li><a href="#proceso">Cómo trabajamos</a></li>
             <li><a href="#diagnostico">Diagnóstico gratuito</a></li>
+            <li><a href="boletin.html">Boletín fiscal</a></li>
             <li><a href="aviso-privacidad.html">Aviso de privacidad</a></li>
             <li><a href="terminos.html">Términos y condiciones</a></li>
             <li><a href="cookies.html">Política de cookies</a></li>
@@ -618,5 +640,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3.11.0/dist/email.min.js" defer></script>
   <script src="assets/js/main.js" defer></script>
   <script src="assets/js/diagnostico.js" defer></script>
+  <script src="assets/js/boletin.js" defer></script>
 </body>
 </html>

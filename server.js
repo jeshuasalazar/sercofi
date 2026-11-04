@@ -27,7 +27,7 @@ const TYPES = {
 };
 const COMPRESSIBLE = new Set([".html", ".css", ".js", ".json", ".svg", ".txt", ".xml"]);
 // Solo se sirven archivos de estas rutas (nunca server.js, package.json, etc.)
-const PUBLIC = [/^\/[\w-]+\.html$/, /^\/assets\/(css|js|img)\/[\w.-]+$/, /^\/(robots\.txt|sitemap\.xml)$/];
+const PUBLIC = [/^\/[\w-]+\.html$/, /^\/assets\/(css|js|img|data)\/[\w.-]+$/, /^\/(robots\.txt|sitemap\.xml)$/];
 
 const SECURITY_HEADERS = {
   "X-Content-Type-Options": "nosniff",
@@ -51,7 +51,7 @@ function send(req, res, status, file) {
   const headers = {
     ...SECURITY_HEADERS,
     "Content-Type": TYPES[ext] || "application/octet-stream",
-    "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=604800",
+    "Cache-Control": ext === ".html" || ext === ".json" ? "no-cache" : "public, max-age=604800",
     Vary: "Accept-Encoding",
   };
   const gzip = COMPRESSIBLE.has(ext) && /\bgzip\b/.test(req.headers["accept-encoding"] || "");
