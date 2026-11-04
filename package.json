@@ -1,0 +1,12 @@
+{
+  "name": "sercofi-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio web de SERCOFI Servicios Contables y Fiscales",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

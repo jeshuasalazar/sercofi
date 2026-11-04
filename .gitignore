@@ -1,0 +1,9 @@
+# Referencias de diseño de terceros (no se publican)
+assets/ref/
+
+# Sistema y editores
+.DS_Store
+.claude/
+.vscode/
+node_modules/
+*.log
