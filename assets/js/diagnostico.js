@@ -15,7 +15,8 @@
     emailjsService: "service_y61rq75",
     templateEmpresa: "template_vdp7az2", // correo a contacto@sercofi.mx
     templateCliente: "template_gk8r1xn", // acuse de recibo al prospecto
-    whatsapp: "525539887605",            // 55-3988-7605 con lada de México
+    whatsapp: "12024577161",             // WhatsApp del asistente (Zernio)
+    agenteUrl: "/api/webhooks/formularios",
     maxServiciosPts: 4,
     umbralCaliente: 14,
     umbralTibio: 8
@@ -159,7 +160,8 @@
       telefono: val("telefono"),
       email: val("email"),
       ciudad: val("ciudad"),
-      canal: val("canal")
+      canal: val("canal"),
+      acepta_whatsapp: !!form.querySelector('input[name="acepta_whatsapp"]:checked')
     };
   }
 
@@ -204,6 +206,22 @@
     ].join("\n");
   }
 
+  // Avisa al agente de WhatsApp. No bloquea ni rompe el envío por correo si falla.
+  function notifyAgent(d, lead) {
+    try {
+      return fetch(CONFIG.agenteUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        keepalive: true,
+        body: JSON.stringify({
+          nombre: d.nombre, telefono: d.telefono, email: d.email, ciudad: d.ciudad,
+          servicios: d.servicios, urgencia: d.urgencia, regimen: d.regimen, mensaje: d.mensaje,
+          nivel: lead.nivel, acepta_whatsapp: d.acepta_whatsapp, privacidad: true
+        })
+      }).catch(function (e) { console.warn("Diagnóstico: no se avisó al agente", e); });
+    } catch (e) { return Promise.resolve(); }
+  }
+
   function send(d, lead) {
     var paramsEmpresa = {
       name: d.nombre,
@@ -221,6 +239,7 @@
       console.info("[Diagnóstico DEMO] No se enviaron correos.", window.__sdLastPayload);
       return new Promise(function (r) { setTimeout(r, 600); });
     }
+    notifyAgent(d, lead);
     if (!window.emailjs) return Promise.reject(new Error("EmailJS no está cargado"));
 
     return emailjs.send(CONFIG.emailjsService, CONFIG.templateEmpresa, paramsEmpresa, CONFIG.emailjsPublicKey)

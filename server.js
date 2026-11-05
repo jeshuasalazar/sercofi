@@ -1,4 +1,4 @@
-// Servidor estático para Railway (sin dependencias).
+// Servidor del sitio + agente de WhatsApp para Railway.
 // Railway define la variable PORT; en local usa 3000.
 "use strict";
 
@@ -6,6 +6,12 @@ const http = require("node:http");
 const fs = require("node:fs");
 const path = require("node:path");
 const zlib = require("node:zlib");
+const db = require("./agente/db");
+const { crearAgente } = require("./agente/nucleo");
+const { crearRutas } = require("./agente/rutas");
+
+const agente = crearAgente({ db, ia: require("./agente/ia"), zernio: require("./agente/zernio") });
+const rutasApi = crearRutas({ agente, db });
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT) || 3000;
@@ -63,7 +69,8 @@ function send(req, res, status, file) {
   (gzip ? stream.pipe(zlib.createGzip()) : stream).pipe(res);
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
+  if (req.url.startsWith("/api/") && (await rutasApi(req, res))) return;
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.writeHead(405, { Allow: "GET, HEAD" });
     return res.end();
@@ -86,5 +93,7 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, "0.0.0.0", () => console.log(`SERCOFI escuchando en el puerto ${PORT}`));
+db.iniciar()
+  .catch((e) => console.error("[db] no se pudo preparar la base de datos:", e.message))
+  .finally(() => server.listen(PORT, "0.0.0.0", () => console.log(`SERCOFI escuchando en el puerto ${PORT}`)));
 process.on("SIGTERM", () => server.close(() => process.exit(0)));

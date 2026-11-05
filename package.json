@@ -4,9 +4,14 @@
   "private": true,
   "description": "Sitio web de SERCOFI Servicios Contables y Fiscales",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test test/"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "openai": "^7.51.0",
+    "pg": "^8.23.1"
   }
 }
