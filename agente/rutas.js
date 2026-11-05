@@ -4,7 +4,13 @@
 //   POST /api/webhooks/formularios <- navegador; reenvía firmado a AGENTE_WEBHOOK_URL
 //   POST /api/agente               <- formularios firmados (X-Agente-Firma)
 //   GET  /api/agente/registro      <- registro de conversaciones (Authorization: Bearer AGENTE_ADMIN_TOKEN)
+//   POST /api/boletin/suscribir    <- navegador; manda correo de confirmación
+//   GET  /api/boletin/confirmar    <- enlace del correo de confirmación
+//   GET|POST /api/boletin/baja     <- enlace de baja (POST = un clic desde el cliente de correo)
+//   POST /api/boletin/enviar       <- manda las notas nuevas (Authorization: Bearer AGENTE_ADMIN_TOKEN)
+//   POST /api/correo/webhook       <- Resend email.received (firma Svix, RESEND_WEBHOOK_SECRET)
 const { firmar, firmaValida, sanitizar } = require("./util");
+const { firmaSvixValida } = require("./correo");
 
 const LIMITE_CUERPO = 64 * 1024;
 
@@ -55,10 +61,27 @@ function normalizarZernio(ev, cuentaId) {
   };
 }
 
-function crearRutas({ agente, db, env = process.env, log = console }) {
+function pagina(res, status, titulo, texto) {
+  const e = (x) => String(x).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  res.writeHead(status, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "X-Robots-Tag": "noindex" });
+  res.end(`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${e(titulo)} · SERCOFI</title><style>body{font-family:Rubik,Arial,sans-serif;background:#f4f6f8;color:#1d2b36;margin:0;display:grid;place-items:center;min-height:100vh;padding:16px}
+main{background:#fff;border-radius:12px;padding:32px;max-width:460px;text-align:center}h1{color:#0b5fa5;font-size:22px}a{color:#0b5fa5;font-weight:600}</style></head>
+<body><main><h1>${e(titulo)}</h1><p>${e(texto)}</p><p><a href="/boletin">Ir al boletín fiscal</a></p></main></body></html>`);
+}
+
+function crearRutas({ agente, db, boletin, env = process.env, log = console }) {
+  const esAdmin = (req) => {
+    const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
+    // Compara en tiempo constante: HMAC del token recibido contra HMAC del esperado.
+    return !!env.AGENTE_ADMIN_TOKEN && firmaValida(token, firmar(env.AGENTE_ADMIN_TOKEN, "registro"), "registro");
+  };
+  const ipDe = (req) => String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+
   return async function rutas(req, res) {
     const url = req.url.split("?")[0];
     if (!url.startsWith("/api/")) return false;
+    const params = new URLSearchParams(req.url.split("?")[1] || "");
 
     try {
       if (req.method === "POST" && url === "/api/whatsapp/webhook") {
@@ -77,8 +100,7 @@ function crearRutas({ agente, db, env = process.env, log = console }) {
       }
 
       if (req.method === "POST" && url === "/api/webhooks/formularios") {
-        const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
-        if (!permitido(ip)) { json(res, 429, { error: "demasiados intentos" }); return true; }
+        if (!permitido("f:" + ipDe(req))) { json(res, 429, { error: "demasiados intentos" }); return true; }
         let f; try { f = JSON.parse(await leerCuerpo(req)); } catch { json(res, 400, { error: "json" }); return true; }
         if (f.empresa_web) { json(res, 200, { ok: true }); return true; } // honeypot
         if (!f.nombre || !f.telefono || f.privacidad !== true) { json(res, 422, { error: "faltan datos" }); return true; }
@@ -111,12 +133,51 @@ function crearRutas({ agente, db, env = process.env, log = console }) {
       }
 
       if (req.method === "GET" && url === "/api/agente/registro") {
-        const token = String(req.headers.authorization || "").replace(/^Bearer\s+/i, "");
-        // Compara en tiempo constante: HMAC del token recibido contra HMAC del esperado.
-        if (!env.AGENTE_ADMIN_TOKEN || !firmaValida(token, firmar(env.AGENTE_ADMIN_TOKEN, "registro"), "registro")) {
-          json(res, 401, { error: "no autorizado" }); return true;
-        }
+        if (!esAdmin(req)) { json(res, 401, { error: "no autorizado" }); return true; }
         json(res, 200, { conversaciones: await db.registro(200) });
+        return true;
+      }
+
+      if (boletin && req.method === "POST" && url === "/api/boletin/suscribir") {
+        if (!permitido("b:" + ipDe(req))) { json(res, 429, { error: "demasiados intentos" }); return true; }
+        let f; try { f = JSON.parse(await leerCuerpo(req)); } catch { json(res, 400, { error: "json" }); return true; }
+        if (f.empresa_web) { json(res, 200, { ok: true }); return true; } // honeypot
+        if (f.acepto !== true) { json(res, 422, { error: "acepta el aviso de privacidad" }); return true; }
+        const r = await boletin.suscribir({ nombre: f.nombre, email: f.email });
+        json(res, r.ok ? 200 : 422, r);
+        return true;
+      }
+
+      if (boletin && req.method === "GET" && url === "/api/boletin/confirmar") {
+        const s = await boletin.confirmar(params.get("t"));
+        if (!s) pagina(res, 404, "Enlace no válido", "Este enlace ya no es válido. Vuelve a suscribirte desde el boletín.");
+        else pagina(res, 200, "¡Suscripción confirmada!", "Te mandamos un correo de bienvenida. Te avisaremos cuando haya cambios fiscales importantes.");
+        return true;
+      }
+
+      if (boletin && (req.method === "GET" || req.method === "POST") && url === "/api/boletin/baja") {
+        const s = await boletin.baja(params.get("t"));
+        if (req.method === "POST") { json(res, s ? 200 : 404, { ok: !!s }); return true; }
+        if (!s) pagina(res, 404, "Enlace no válido", "No encontramos esta suscripción.");
+        else pagina(res, 200, "Listo, te diste de baja", "Ya no recibirás el boletín de SERCOFI. Puedes volver a suscribirte cuando quieras.");
+        return true;
+      }
+
+      if (boletin && req.method === "POST" && url === "/api/boletin/enviar") {
+        if (!esAdmin(req)) { json(res, 401, { error: "no autorizado" }); return true; }
+        json(res, 200, await boletin.enviarPendientes({ forzarPrimeraVez: params.get("forzar") === "1" }));
+        return true;
+      }
+
+      if (boletin && req.method === "POST" && url === "/api/correo/webhook") {
+        const cuerpo = (await leerCuerpo(req)).toString("utf8");
+        if (!firmaSvixValida(cuerpo, req.headers, env.RESEND_WEBHOOK_SECRET)) { json(res, 401, { error: "firma inválida" }); return true; }
+        let ev; try { ev = JSON.parse(cuerpo); } catch { json(res, 400, { error: "json" }); return true; }
+        json(res, 200, { ok: true });
+        const idEvento = "resend:" + (req.headers["svix-id"] || ev.data?.email_id);
+        if (await db.eventoNuevo(idEvento)) {
+          boletin.correoEntrante(ev).then((r) => log.log("[correo]", r.accion)).catch((e) => log.error("[correo] error:", e));
+        }
         return true;
       }
 

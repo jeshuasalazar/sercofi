@@ -14,15 +14,25 @@ const TOOLS = HERRAMIENTAS.map((h) => ({
   type: "function", name: h.name, description: h.description, strict: true, parameters: h.input_schema,
 }));
 
+const INDICACIONES_CORREO =
+  "Este mensaje no llegó por WhatsApp: es un correo que un suscriptor respondió al boletín fiscal de SERCOFI. " +
+  "Contesta como correo: saludo breve, máximo 5 frases, texto plano sin Markdown, y al final no firmes (la firma se agrega sola). " +
+  "Di que eres el asistente de inteligencia artificial de SERCOFI. Las mismas reglas aplican: si piden algo de su caso concreto, " +
+  "precios, descuentos, quejas o algo que no está en el Conocimiento, usa pasar_a_persona; en mensaje_cliente di que " +
+  "Edith Pineda le responderá por correo. Si solo agradecen o comentan la nota, contesta amable y breve.";
+
 const PASO_GENERICO = `Prefiero que esto lo vea una persona del equipo. ${NEGOCIO.persona}, de SERCOFI, te escribirá por aquí.`;
 
 /**
  * @param {{rol:"user"|"assistant", texto:string}[]} historial  últimos mensajes (sin el actual)
  * @param {string} texto  mensaje nuevo del cliente
+ * @param {{canal?: "whatsapp"|"correo"}} [opciones]
  * @returns {Promise<{texto:string, pasar:null|{motivo:string,resumen:string}, uso?:object}>}
  */
-async function responder(historial, texto) {
+async function responder(historial, texto, opciones = {}) {
   const input = historial.map((m) => ({ role: m.rol, content: m.texto }));
+  // Las indicaciones del canal van después del prefijo fijo para no romper la caché.
+  if (opciones.canal === "correo") input.push({ role: "developer", content: INDICACIONES_CORREO });
   input.push({ role: "user", content: texto });
 
   const r = await api().responses.create({

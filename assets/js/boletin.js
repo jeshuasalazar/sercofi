@@ -9,7 +9,6 @@
   "use strict";
 
   var DATA_URL = "assets/data/boletin.json";
-  var EMAILJS = { key: "XMa5rvTXQX2Y8MG5H", service: "service_y61rq75", template: "template_vdp7az2" };
   var MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
   var ICON = {
     arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
@@ -270,17 +269,16 @@
 
       var btn = sub.querySelector("button");
       btn.disabled = true; btn.textContent = "Enviando…";
-      var params = {
-        name: nombre, email: email, phone: "—", interes: "Boletín fiscal",
-        title: "[BOLETÍN] Nueva suscripción – " + nombre,
-        message: "Nueva suscripción al boletín fiscal.\nNombre: " + nombre + "\nCorreo: " + email + "\nAceptó el Aviso de Privacidad: sí\nFecha: " + new Date().toLocaleString("es-MX")
-      };
       var p = window.SERCOFI_DIAG_DEMO
-        ? new Promise(function (r) { window.__bfLastSub = params; setTimeout(r, 500); })
-        : window.emailjs ? emailjs.send(EMAILJS.service, EMAILJS.template, params, EMAILJS.key) : Promise.reject(new Error("EmailJS no cargó"));
+        ? new Promise(function (r) { window.__bfLastSub = { nombre: nombre, email: email }; setTimeout(r, 500); })
+        : fetch("/api/boletin/suscribir", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nombre: nombre, email: email, acepto: true, empresa_web: sub.empresa_web.value })
+          }).then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); });
       p.then(function () {
         sub.reset();
-        msg.textContent = "¡Listo! Te avisaremos cuando haya novedades.";
+        msg.textContent = "¡Casi listo! Te mandamos un correo para confirmar tu suscripción.";
         msg.classList.add("ok");
       }).catch(function () {
         msg.textContent = "No pudimos registrarte. Intenta de nuevo o escríbenos a contacto@sercofi.mx.";

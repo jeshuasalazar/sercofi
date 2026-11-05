@@ -10,8 +10,16 @@ const db = require("./agente/db");
 const { crearAgente } = require("./agente/nucleo");
 const { crearRutas } = require("./agente/rutas");
 
-const agente = crearAgente({ db, ia: require("./agente/ia"), zernio: require("./agente/zernio") });
-const rutasApi = crearRutas({ agente, db });
+const { crearBoletin } = require("./agente/boletin");
+
+const ia = require("./agente/ia");
+const agente = crearAgente({ db, ia, zernio: require("./agente/zernio") });
+const leerNoticias = async () => {
+  const datos = JSON.parse(await fs.promises.readFile(path.join(__dirname, "assets/data/boletin.json"), "utf8"));
+  return [...datos.noticias].sort((a, b) => b.fecha.localeCompare(a.fecha));
+};
+const boletin = crearBoletin({ db, ia, correo: require("./agente/correo"), avisarDueno: agente.avisarDueno, leerNoticias });
+const rutasApi = crearRutas({ agente, db, boletin });
 
 const ROOT = __dirname;
 const PORT = Number(process.env.PORT) || 3000;
@@ -95,5 +103,13 @@ const server = http.createServer(async (req, res) => {
 
 db.iniciar()
   .catch((e) => console.error("[db] no se pudo preparar la base de datos:", e.message))
-  .finally(() => server.listen(PORT, "0.0.0.0", () => console.log(`SERCOFI escuchando en el puerto ${PORT}`)));
+  .finally(() => server.listen(PORT, "0.0.0.0", () => {
+    console.log(`SERCOFI escuchando en el puerto ${PORT}`);
+    // Cada despliegue revisa si hay notas nuevas en el boletín y las manda a los suscriptores.
+    if (process.env.BOLETIN_AUTO === "1" && process.env.RESEND_API_KEY) {
+      setTimeout(() => boletin.enviarPendientes()
+        .then((r) => console.log("[boletin] envío automático:", JSON.stringify(r)))
+        .catch((e) => console.error("[boletin] envío automático falló:", e.message)), 15000);
+    }
+  }));
 process.on("SIGTERM", () => server.close(() => process.exit(0)));

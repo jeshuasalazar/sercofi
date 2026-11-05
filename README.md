@@ -43,3 +43,12 @@ Para probar sin enviar correos reales, ejecuta en la consola del navegador `wind
 - Pruebas: `npm test` (las de conducta necesitan `OPENAI_API_KEY`).
 
 Variables: `ZERNIO_API_KEY`, `ZERNIO_ACCOUNT_ID`, `ZERNIO_WEBHOOK_SECRET`, `OPENAI_API_KEY`, `AGENTE_MODELO`, `AGENTE_WEBHOOK_URL`, `AGENTE_WEBHOOK_SECRETO`, `AGENTE_ADMIN_TOKEN`, `AVISO_WHATSAPP_DUENO`, `PLANTILLA_BIENVENIDA`, `PLANTILLA_AVISO_DUENO`, `PLANTILLA_IDIOMA`, `DATABASE_URL`.
+
+## Boletín por correo (Resend, `agente/boletin.js`)
+
+- Suscripción con doble confirmación: `POST /api/boletin/suscribir` → correo con enlace a `/api/boletin/confirmar?t=…`. Baja: enlace de cada correo (`/api/boletin/baja?t=…`, también un clic con `List-Unsubscribe`) o respondiendo BAJA.
+- Envío: en cada despliegue (`BOLETIN_AUTO=1`) se mandan a los suscriptores activos las notas de `assets/data/boletin.json` que aún no se han enviado. La primera vez solo marca las existentes. Envío manual: `POST /api/boletin/enviar` con `Authorization: Bearer $AGENTE_ADMIN_TOKEN`.
+- Respuestas: Resend manda `email.received` a `POST /api/correo/webhook` (firma Svix, `RESEND_WEBHOOK_SECRET`). El asistente contesta en el mismo hilo (máximo 5 por día y remitente), ignora respuestas automáticas y pasa a Edith por WhatsApp lo que no le toca. Para regresarlo al bot: `CERRAR <correo>` al WhatsApp del asistente.
+- Las respuestas llegan a Resend por `respuestas.soylumbrera.com` (no se toca el correo de Spacemail de soylumbrera.com). Cuando sus registros DNS estén verificados, define `CORREO_RESPONDER_A=boletin@respuestas.soylumbrera.com`.
+
+Variables: `RESEND_API_KEY`, `RESEND_WEBHOOK_SECRET`, `CORREO_REMITENTE`, `CORREO_RESPONDER_A`, `SITIO_URL`, `BOLETIN_AUTO`.

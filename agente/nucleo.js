@@ -44,10 +44,17 @@ function crearAgente({ db, ia, zernio, reloj = () => new Date(), env = process.e
   // Mensajes del dueño al número del bot: comandos para cerrar el paso a persona.
   async function comandoDueno(m) {
     await db.guardarConversacion({ id: m.conversationId, telefono: m.telefono, nombre: m.nombre, origen: "dueno", ultimo_entrante: reloj() });
+    const correoCmd = /^\s*cerrar\s+(\S+@\S+\.\S+)\s*$/i.exec(m.texto || "");
+    if (correoCmd) {
+      const email = correoCmd[1].toLowerCase();
+      if (!(await db.hilo(email))) return zernio.responder(m.conversationId, "No encontré un correo de " + email + ".");
+      await db.guardarHilo({ email, estado: "bot" });
+      return zernio.responder(m.conversationId, "Listo, los correos de " + email + " los vuelve a contestar el bot.");
+    }
     const cmd = /^\s*cerrar\s*\+?([\d\s-]{8,})\s*$/i.exec(m.texto || "");
     if (!cmd) {
       return zernio.responder(m.conversationId,
-        "Hola " + NEGOCIO.persona.split(" ")[0] + ". Para regresar una conversación al bot escribe: CERRAR seguido del número del cliente (ej. CERRAR 5215512345678).");
+        "Hola " + NEGOCIO.persona.split(" ")[0] + ". Para regresar una conversación al bot escribe: CERRAR seguido del número del cliente (ej. CERRAR 5215512345678) o de su correo.");
     }
     const tel = telefonoInternacional(cmd[1]);
     const conv = await db.conversacionPorTelefono(tel);

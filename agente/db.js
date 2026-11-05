@@ -37,11 +37,40 @@ CREATE TABLE IF NOT EXISTS contactos (
 CREATE TABLE IF NOT EXISTS eventos (
   id TEXT PRIMARY KEY,
   fecha TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS suscriptores (
+  email TEXT PRIMARY KEY,
+  nombre TEXT,
+  token TEXT NOT NULL UNIQUE,
+  estado TEXT NOT NULL DEFAULT 'pendiente',   -- pendiente | activo | baja
+  creado TIMESTAMPTZ NOT NULL DEFAULT now(),
+  confirmado TIMESTAMPTZ,
+  baja_fecha TIMESTAMPTZ
+);
+CREATE TABLE IF NOT EXISTS boletin_enviados (
+  noticia_id TEXT PRIMARY KEY,
+  fecha TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS correo_hilos (
+  email TEXT PRIMARY KEY,
+  estado TEXT NOT NULL DEFAULT 'bot',        -- bot | humano
+  respuestas_dia INT NOT NULL DEFAULT 0,
+  dia TEXT,                                  -- AAAA-MM-DD
+  actualizado TIMESTAMPTZ NOT NULL DEFAULT now()
 );`;
 
 function memoria() {
   const conv = new Map(), msgs = new Map(), contactos = new Map(), eventos = new Set();
+  const subs = new Map(), enviadas = new Set(), hilos = new Map();
   return {
+    async suscriptor(email) { return subs.get(email) || null; },
+    async suscriptorPorToken(t) { return [...subs.values()].find((x) => x.token === t) || null; },
+    async guardarSuscriptor(x) { const v = { estado: "pendiente", creado: new Date(), ...(subs.get(x.email) || {}), ...x }; subs.set(x.email, v); return v; },
+    async suscriptoresActivos() { return [...subs.values()].filter((x) => x.estado === "activo"); },
+    async noticiasEnviadas() { return new Set(enviadas); },
+    async marcarEnviadas(ids) { ids.forEach((i) => enviadas.add(i)); },
+    async hilo(email) { return hilos.get(email) || null; },
+    async guardarHilo(h) { const v = { estado: "bot", respuestas_dia: 0, ...(hilos.get(h.email) || {}), ...h }; hilos.set(h.email, v); return v; },
     async iniciar() {},
     async eventoNuevo(id) { if (eventos.has(id)) return false; eventos.add(id); return true; },
     async conversacion(id) { return conv.get(id) || null; },
@@ -81,6 +110,28 @@ function postgres(url) {
   const q = (sql, p) => pool.query(sql, p);
   const COLS = ["telefono", "nombre", "origen", "estado", "pasada_a_persona", "veces_pasada", "aviso_ia_enviado", "ultimo_entrante"];
   return {
+    async suscriptor(email) { return (await q("SELECT * FROM suscriptores WHERE email=$1", [email])).rows[0] || null; },
+    async suscriptorPorToken(t) { return (await q("SELECT * FROM suscriptores WHERE token=$1", [t])).rows[0] || null; },
+    async guardarSuscriptor(x) {
+      return (await q(`INSERT INTO suscriptores (email, nombre, token, estado, confirmado, baja_fecha)
+        VALUES ($1,$2,COALESCE($3, md5(random()::text || clock_timestamp()::text)),COALESCE($4,'pendiente'),$5,$6)
+        ON CONFLICT (email) DO UPDATE SET nombre=COALESCE($2, suscriptores.nombre), token=COALESCE($3, suscriptores.token),
+          estado=COALESCE($4, suscriptores.estado), confirmado=COALESCE($5, suscriptores.confirmado),
+          baja_fecha=COALESCE($6, suscriptores.baja_fecha)
+        RETURNING *`, [x.email, x.nombre ?? null, x.token ?? null, x.estado ?? null, x.confirmado ?? null, x.baja_fecha ?? null])).rows[0];
+    },
+    async suscriptoresActivos() { return (await q("SELECT * FROM suscriptores WHERE estado='activo' ORDER BY email")).rows; },
+    async noticiasEnviadas() { return new Set((await q("SELECT noticia_id FROM boletin_enviados")).rows.map((r) => r.noticia_id)); },
+    async marcarEnviadas(ids) {
+      if (ids.length) await q("INSERT INTO boletin_enviados (noticia_id) SELECT unnest($1::text[]) ON CONFLICT DO NOTHING", [ids]);
+    },
+    async hilo(email) { return (await q("SELECT * FROM correo_hilos WHERE email=$1", [email])).rows[0] || null; },
+    async guardarHilo(h) {
+      return (await q(`INSERT INTO correo_hilos (email, estado, respuestas_dia, dia) VALUES ($1,COALESCE($2,'bot'),COALESCE($3,0),$4)
+        ON CONFLICT (email) DO UPDATE SET actualizado=now(), estado=COALESCE($2, correo_hilos.estado),
+          respuestas_dia=COALESCE($3, correo_hilos.respuestas_dia), dia=COALESCE($4, correo_hilos.dia)
+        RETURNING *`, [h.email, h.estado ?? null, h.respuestas_dia ?? null, h.dia ?? null])).rows[0];
+    },
     async iniciar() { await q(ESQUEMA); },
     async eventoNuevo(id) {
       const r = await q("INSERT INTO eventos (id) VALUES ($1) ON CONFLICT DO NOTHING", [id]);
